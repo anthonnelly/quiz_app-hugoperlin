@@ -33,49 +33,50 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("Quiz App"),
       ),
-      body: controladorQuiz.verResultados?
-    
-      
-      ?Container(
-        padding: EdgeInsets.all(50),
-        child: Center(
-          child: Text("Resultados"),
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                  "Questão ${controladorQuiz.indiceQuestaoAtual}/${controladorQuiz.quantidadeTotalQuestoes}"),
-              Divider(thickness: 5),
-              Text(questao.enunciado),
-              Divider(thickness: 5),
-              SizedBox(height: 10),
-              ...controladorQuiz.questaoAtual.alternativas.map(
-                (alternativa) {
-                  return BotaoAlternativa(
-                    alternativa: alternativa,
-                    acao: _selecionarAlternativa,
-                    selecionada:
-                        controladorQuiz.alternativaSelecionada == alternativa,
-                    acertou: controladorQuiz.acertouResposta,
-                    respondeu: controladorQuiz.respondeuPergunta,
-                  );
-                },
+      body: controladorQuiz.verResultados
+          ? Container(
+              child: Center(child: Text("Resultados")),
+            )
+          : Container(
+              padding: EdgeInsets.all(50),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                        "Questão ${controladorQuiz.indiceQuestaoAtual}/${controladorQuiz.quantidadeTotalQuestoes}"),
+                    Divider(thickness: 5),
+                    Text(questao.enunciado),
+                    Divider(thickness: 5),
+                    SizedBox(height: 10),
+                    ...controladorQuiz.questaoAtual.alternativas.map(
+                      (alternativa) {
+                        return BotaoAlternativa(
+                          alternativa: alternativa,
+                          acao: _selecionarAlternativa,
+                          selecionada: controladorQuiz.alternativaSelecionada ==
+                              alternativa,
+                          acertou: controladorQuiz.acertouResposta,
+                          respondeu: controladorQuiz.respondeuPergunta,
+                        );
+                      },
+                    ),
+                    controladorQuiz.status != StatusQuiz.AGUARDAR
+                        ? BotaoAcao(
+                            texto: controladorQuiz.acabou
+                                ? "Resultados"
+                                : controladorQuiz.selecionouAlternativa
+                                    ? "Responder"
+                                    : "Proxima Pergunta",
+                            acao: _proximaPergunta,
+                          )
+                        : SizedBox(
+                            height: 100,
+                          )
+                  ],
+                ),
               ),
-              controladorQuiz.status != StatusQuiz.AGUARDAR
-                  ? BotaoAcao(
-                      texto: controladorQuiz.acabou
-                          ? "Resultados"
-                          : controladorQuiz.selecionouAlternativa
-                              ? "Responder"
-                              : "Proxima Pergunta",
-                      acao: _proximaPergunta,
-                    )
-                  : SizedBox(
-                      height: 100,
-                    )
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }
